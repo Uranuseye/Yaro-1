@@ -55,7 +55,7 @@ export class AddAlbumComponent implements OnInit {
     }
     if (this.mode === 'create') { // if we are creating new album
       const album: AlbumModel = {
-        id: null,
+        albumId: null,
         name: form.value.album,
         info: form.value.info,
         dateCreated: '',

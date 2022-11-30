@@ -2,7 +2,7 @@
  * interface of Album Data
  */
 export interface AlbumModel {
-  id: string;
+  albumId: string;
   name: string;
   creator?: string;
   info: string;

@@ -152,7 +152,7 @@ export class AlbumComponent implements OnInit, OnDestroy {
       for (const file of files) {
         console.dir(file);
         const fd = new FormData();
-        fd.append('AlbumId', this.albumInfo.id); // we append the album name to the file
+        fd.append('AlbumId', this.albumInfo.albumId); // we append the album name to the file
         fd.append('File', file);
         this.filesService.uploadFile(/* this.albumInfo.objId, */ fd); // every file in files array is send one by one
       }
@@ -187,7 +187,7 @@ export class AlbumComponent implements OnInit, OnDestroy {
         });
         console.dir('this selected' + itemsToDelete);
 
-        this.albumService.delFileFromAlbum(this.albumInfo.id, itemsToDelete);
+        this.albumService.delFileFromAlbum(this.albumInfo.albumId, itemsToDelete);
         this.selectedItems = [];
       }
       this.disselectAll();
@@ -334,7 +334,7 @@ export class AlbumComponent implements OnInit, OnDestroy {
         console.dir(sharedFiles);
 
         this.filesService.shareFileWithUser(
-          this.albumInfo.id,
+          this.albumInfo.albumId,
           result,
           sharedFiles
         );
@@ -351,7 +351,7 @@ export class AlbumComponent implements OnInit, OnDestroy {
     const dialogRef = this.openNewAlbumDialog();
     dialogRef.afterClosed().subscribe((retAlbum) => {
       if (retAlbum != null) {
-        const album: AlbumModel = this.setNewAlbumObject(retAlbum);
+        const album: AlbumModel = retAlbum;//this.setNewAlbumObject(retAlbum);
         const itemsToCopy: Array<string> = [];
         this.selectedItems.forEach((selectedItem) => {
           itemsToCopy.push(selectedItem.objId);
@@ -362,7 +362,7 @@ export class AlbumComponent implements OnInit, OnDestroy {
 
         this.albumService.createNewAlbum(album).subscribe((createdAlbum) => {
           this.albumService.copyFilesToExistingAlbum(
-            this.albumInfo.id,
+            this.albumInfo.albumId,
             createdAlbum.id,
             itemsToCopy
           );
@@ -385,7 +385,7 @@ export class AlbumComponent implements OnInit, OnDestroy {
     const dialogRef = this.openNewAlbumDialog();
     dialogRef.afterClosed().subscribe((retAlbum) => {
       if (retAlbum != null) {
-        const album: AlbumModel = this.setNewAlbumObject(retAlbum);
+        const album: AlbumModel = retAlbum;//this.setNewAlbumObject(retAlbum);
         const itemsToMove: Array<string> = [];
 
         this.selectedItems.forEach((selectedItem) => {
@@ -402,8 +402,9 @@ export class AlbumComponent implements OnInit, OnDestroy {
             console.log(response.objId);
            */
           this.albumService.moveFilesToExistingAlbum(
-            this.albumInfo.id,
-            createdAlbum.id,
+            this.albumInfo.albumId,
+            
+            createdAlbum.albumId,
             itemsToMove
           );
           this.disselectAll();
@@ -426,9 +427,9 @@ export class AlbumComponent implements OnInit, OnDestroy {
         if (userId != null) {
           this.openNewAlbumDialog()
             .afterClosed()
-            .subscribe((retAlbum) => {
+            .subscribe((retAlbum: AlbumModel) => {
               if (retAlbum != null) {
-                const album: AlbumModel = this.setNewAlbumObject(retAlbum);
+                const album: AlbumModel = retAlbum; //this.setNewAlbumObject(retAlbum);
                 const itemsToMove: Array<string> = [];
                 this.selectedItems.forEach((selectedItem) => {
                   itemsToMove.push(selectedItem.objId);
@@ -448,7 +449,7 @@ export class AlbumComponent implements OnInit, OnDestroy {
     this.selectStr = 'Select All';
   }
 
-  private setNewAlbumObject(retAlbum: any): AlbumModel {
+ /*  private setNewAlbumObject(retAlbum: any): AlbumModel {
     return {
       id: null,
       name: retAlbum.name,
@@ -456,7 +457,7 @@ export class AlbumComponent implements OnInit, OnDestroy {
       dateCreated: '',
       creator: '',
     };
-  }
+  } */
 
   /**
    * Cut out
@@ -474,8 +475,8 @@ export class AlbumComponent implements OnInit, OnDestroy {
         });
         this.selectedItems = [];
         this.albumService.moveFilesToExistingAlbum(
-          this.albumInfo.id,
-          album.id,
+          this.albumInfo.albumId,
+          album.albumId,
           itemsToMove
         );
       }
@@ -498,8 +499,8 @@ export class AlbumComponent implements OnInit, OnDestroy {
         });
         console.dir('this selected' + itemsToCopy);
         this.albumService.copyFilesToExistingAlbum(
-          this.albumInfo.id,
-          album.id,
+          this.albumInfo.albumId,
+          album.albumId,
           itemsToCopy
         );
         this.selectedItems = [];

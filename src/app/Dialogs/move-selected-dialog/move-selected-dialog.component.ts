@@ -15,9 +15,10 @@ import { map, startWith } from 'rxjs/operators';
 export class MoveCopySelectedDialogComponent implements OnInit {
   myControl = new FormControl();
   options?: AlbumModel[];
-  albumObservable: Observable<AlbumModel[]>;
+  private albumObservable: Observable<AlbumModel[]>;
+
   //something = '';
-  public selected;
+  public selected:AlbumModel;
 
   constructor(
     private albumService: AlbumService,
@@ -28,14 +29,8 @@ export class MoveCopySelectedDialogComponent implements OnInit {
   ngOnInit() {
     this.albumService.getAlbums();
     this.albumObservable = this.albumService.getAlbumUpdateListener();
-    this.albumObservable.subscribe((albums) => {
-      this.options = albums.filter((album)=>{return album.name!=='Recycle Bin'});
-      //
-      // this.users2Show = data.sort(( l, r ) => {
-      //   const left = l.LastName + l.FirstName;
-      //   const right = r.LastName + r.FirstName;
-      //   return left < right ? -1 : 1;
-      // });
+    this.albumObservable.subscribe((albums:AlbumModel[]) => {
+      this.options = albums.filter((album:AlbumModel)=>{return album.name!=='Recycle Bin'});
     });
 
     this.albumObservable = this.myControl.valueChanges.pipe(
@@ -52,7 +47,8 @@ export class MoveCopySelectedDialogComponent implements OnInit {
     );
   }
 
-  onShopSelectionChanged(selected: any) {
+  onShopSelectionChanged(selected:AlbumModel):void {
+
     this.selected = selected; //.objId;
   }
 }

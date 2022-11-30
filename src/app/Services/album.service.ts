@@ -63,7 +63,7 @@ export class AlbumService {
   getAlbumInfo(albumId) {
     console.log('size of alubums ' + this.albums.length);
     console.dir(this.albums);
-    const albumObject: AlbumModel = this.albums.find((o) => o.id === albumId);
+    const albumObject: AlbumModel = this.albums.find((o) => o.albumId === albumId);
     console.log(albumObject);
     return albumObject;
   }
@@ -88,7 +88,7 @@ export class AlbumService {
           //   return { // and then return it
           //     name: album.name,
           //     info: album.info,
-          //     id: album.id,
+          //     id: album.albumId,
           //     creator: album.creator,
           //     dateCreated: album.dateCreated
           //   };
@@ -118,7 +118,7 @@ export class AlbumService {
           return {
             name: albumData.name,
             info: albumData.info,
-            id: albumData.id,
+            id: albumData.albumId,
             creator: albumData.creator,
             dateCreated: albumData.dateCreated.toString(),
             //files: albumData.files,
@@ -137,6 +137,7 @@ export class AlbumService {
    * @param {Album} albumObj
    */
   addAlbum(albumObj: AlbumModel) {
+    debugger;
     const album: AlbumModel = albumObj;
     album.info = album.info ?? 'null';
 
@@ -150,7 +151,7 @@ export class AlbumService {
         console.warn(responseData);
         console.debug(responseData);
         // we receive back from the server the album id that was just added
-        album.id = responseData.albumId; // init the album id with the id we received from server
+        album.albumId = responseData.albumId; // init the album id with the id we received from server
         console.log(
           `addAlbum(albumObj: AlbumModel) responded with: ${responseData.message}`
         );
@@ -167,7 +168,7 @@ export class AlbumService {
    */
   createNewAlbum(albumObj: AlbumModel) {
     const album: AlbumModel = albumObj;
-    return this.http.post<{ id: string }>(
+    return this.http.post<{ albumId: string }>(
       host + '/api/album/create_album',
       album
     );
@@ -187,7 +188,7 @@ export class AlbumService {
       .subscribe(() => {
         console.log('deleted!');
         // we remove the album from our list
-        this.albums = this.albums.filter((album) => album.id !== albumId); // init the album list with the filtered list
+        this.albums = this.albums.filter((album) => album.albumId !== albumId); // init the album list with the filtered list
         this.albumsUpdated.next([...this.albums]); // and we inform the subject and return new copy of albums array
       });
   }
@@ -216,7 +217,7 @@ export class AlbumService {
    */
   updateAlbum(albumId: string, name: string, info: string, date: string) {
     const albumUpdated: AlbumModel = {
-      id: albumId,
+      albumId: albumId,
       name: name,
       info: info,
       dateCreated: date,
@@ -227,7 +228,7 @@ export class AlbumService {
       .subscribe(() => {
         const updatedAlbums = [...this.albums]; // we init updated albums with fresh copy of albums
         const oldAlbumIndex = updatedAlbums.findIndex(
-          (p) => p.id === albumUpdated.id
+          (p) => p.albumId === albumUpdated.albumId
         ); // we find the index of the album updated
         updatedAlbums[oldAlbumIndex] = albumUpdated; // and replace with the new album object
         this.albums = updatedAlbums; // we init the new album list with the updated array of albums
@@ -237,13 +238,13 @@ export class AlbumService {
   }
 
   moveFilesToExistingAlbum(
-    currentAlbum: string,
-    newAlbum: string,
+    currentAlbumId: string,
+    newAlbumId: string,
     files: string[]
   ) {
     const albumMoved = {
-      albumToMoveTo: newAlbum,
-      currentAlbum: currentAlbum,
+      albumToMoveTo: newAlbumId,
+      currentAlbum: currentAlbumId,
       listOfFiles: files,
     };
     console.dir(albumMoved);
@@ -276,7 +277,7 @@ export class AlbumService {
    */
   delFileFromAlbum(currentAlbum: string, files: string[]) {
     const albumDelete = {
-      sourceAlbumId: currentAlbum,
+      albumId: currentAlbum,
       ListOfFilesToDelete: files,
     };
     this.http

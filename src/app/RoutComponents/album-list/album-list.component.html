@@ -56,7 +56,7 @@
   
   
           <mat-card-actions>
-            <a class="button" [routerLink]="['/album',album.id]">Open</a>
+            <a class="button" [routerLink]="['/album',album.albumId]">Open</a>
             <!-- <button mat-icon-button [matMenuTriggerFor]="menu"> -->
             <div
             *ngIf="(album.name !=='Recycle Bin')"
@@ -70,11 +70,11 @@
   
   
           <mat-menu #menu="matMenu" >
-            <button mat-menu-item [routerLink]="['/edit',album.id]">
+            <button mat-menu-item [routerLink]="['/edit',album.albumId]">
               <mat-icon>create</mat-icon>
               <span>Edit</span>
             </button>
-            <button mat-menu-item (click)="onDelete(album.id, album.name)">
+            <button mat-menu-item (click)="onDelete(album.albumId, album.name)">
               <mat-icon>delete_sweep</mat-icon>
               <span>Delete</span>
             </button>

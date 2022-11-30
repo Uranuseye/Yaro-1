@@ -1,6 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 //import {AlbumService} from '../../Services/album.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { AlbumModel } from 'src/app/DataModels/album.model';
 import {FileObject} from '../../DataModels/fileObject.model';
 
 @Component({
@@ -22,7 +23,15 @@ export class NewAlbumDialogComponent implements OnInit {
   }
 
   submitAlbum() {
-    const album = {Name: this.Name, AlbumInfo: this.AlbumInfo};
+    const album: AlbumModel = {
+        albumId: null,
+        name: this.Name,
+        info: this.AlbumInfo,
+        dateCreated: '',
+        creator: '',
+       // files: []
+      };
+    // const album = {name: this.Name, info: this.AlbumInfo};
     return album;
   }
 
