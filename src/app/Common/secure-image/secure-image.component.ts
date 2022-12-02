@@ -22,8 +22,6 @@ export class SecureImageComponent implements OnChanges, OnDestroy {
   ngOnChanges(): void {}
 
   ngOnInit() {
-    console.warn(this.src);
-    console.warn('https://localhost:5001/api/Data/-----');
     if (this.isBase64(this.src)) {
       this.imageURL = this.src;
     } else {
@@ -41,6 +39,6 @@ export class SecureImageComponent implements OnChanges, OnDestroy {
   }
 
   ngOnDestroy() {
-    //URL.revokeObjectURL(this.imageURL.toString());
+    URL.revokeObjectURL(this.imageURL.toString());
   }
 }

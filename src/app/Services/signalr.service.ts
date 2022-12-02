@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HubConnection, HubConnectionBuilder} from '@aspnet/signalr';
 import {AuthenticationService} from './auth.service';
-import {host} from '../globals';
+import {hostApi} from '../globals';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,11 @@ export class SignalrService {
     this.userId = this.authService.getUserID();
     console.log('The User that is on signalR is' + this.userId);
     this.hubConnection = new HubConnectionBuilder()
-      .withUrl(host + '/notiffication')
+      .withUrl(hostApi + '/notiffication')
+      ///hostApi + '/notiffication'
+      /* hostApi + '/notiffication'
+       */
+      //hostApi + '/notiffication'
       .build();
 
     this.hubConnection.start().then(() => {

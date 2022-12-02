@@ -1,4 +1,4 @@
-<app-options-buttons></app-options-buttons> 
+<app-options-buttons></app-options-buttons>
 <div class="main-wrapper" *ngIf="!isLoading">
 
   <h2>{{albumInfo.name}}</h2>
@@ -42,8 +42,8 @@
           <div class="buttons">
             <button mat-button class="button select" (click)="chooseAll()">{{selectStr}}</button>
 
-            <button mat-button 
-              [matMenuTriggerFor]="albumInfo.name ==='Recycle Bin' ? recycleMenu : albumInfo.name ==='FILES_TO_DELETE' ? fileDeleteMenu : optionsMenu" 
+            <button mat-button
+              [matMenuTriggerFor]="albumInfo.name ==='Recycle Bin' ? recycleMenu : albumInfo.name ==='FILES_TO_DELETE' ? fileDeleteMenu : optionsMenu"
               [disabled]="selectedItems.length==0" class="button select">
               Options
             </button>
@@ -53,14 +53,14 @@
               <button mat-menu-item [matMenuTriggerFor]="copyTo">Copy</button>
               <button mat-menu-item (click)="shareSelected()">Share</button>
               <buttonm mat-menu-item [matMenuTriggerFor]="deleteOpts">Delete</buttonm>
-             <mat-menu #deleteOpts>
-              <button mat-menu-item (click)="deleteSelected()">
-                Delete Selected
-              </button>
-              <button mat-menu-item (click)="wipeFromAll()">
-                Delete From All MY Albums
-              </button>
-             </mat-menu>
+              <mat-menu #deleteOpts>
+                <button mat-menu-item (click)="deleteSelected()">
+                  Delete Selected
+                </button>
+                <button mat-menu-item (click)="wipeFromAll()">
+                  Delete From All MY Albums
+                </button>
+              </mat-menu>
             </mat-menu>
             <mat-menu #moveTo="matMenu">
               <button mat-menu-item (click)="moveSelectedToNewAlbum()">Move to New Album</button>
@@ -68,9 +68,9 @@
             </mat-menu>
             <mat-menu #copyTo="matMenu">
               <button mat-menu-item (click)="copySelectedToNewAlbum()">Copy to New Album</button>
-                <button mat-menu-item (click)="copySelectedToExistingAlbum()">Copy to Existing Album</button>
-            </mat-menu> 
-            
+              <button mat-menu-item (click)="copySelectedToExistingAlbum()">Copy to Existing Album</button>
+            </mat-menu>
+
             <mat-menu #recycleMenu="matMenu">
               <button mat-menu-item [matMenuTriggerFor]="moveTo">Move</button>
               <button mat-menu-item [matMenuTriggerFor]="deleteOptsRes">Delete</button>
@@ -82,18 +82,18 @@
               <button mat-menu-item (click)="wipeFromAllResBin()">
                 Delete From All MY Albums
               </button>
-             </mat-menu>
-          
-             <mat-menu #fileDeleteMenu="matMenu">
-              <button  mat-menu-item (click)="assignToUser()">Assign to User</button>
+            </mat-menu>
+
+            <mat-menu #fileDeleteMenu="matMenu">
+              <button mat-menu-item (click)="assignToUser()">Assign to User</button>
               <button mat-menu-item (click)="deleteForever()">Delete Forever</button>
-             </mat-menu>
+            </mat-menu>
           </div>
 
           <mat-form-field>
             <!-- id="inputEmail" -->
-            <input matInput type="text" [(ngModel)]="filterStr" placeholder="Enter search"
-                   [(ngModel)]="file_name" [ngModelOptions]="{standalone: true}">
+            <input matInput type="text" [(ngModel)]="filterStr" placeholder="Enter search" [(ngModel)]="file_name"
+              [ngModelOptions]="{standalone: true}">
           </mat-form-field>
 
           <button mat-button class="sort" [matMenuTriggerFor]="menu">
@@ -107,28 +107,23 @@
             <button mat-menu-item>etc..</button>
           </mat-menu>
 
-          <cdk-virtual-scroll-viewport 
-            class="gallery"
-            appendOnly 
-            [itemSize]="30"
-           >
+          <cdk-virtual-scroll-viewport class="gallery" appendOnly [itemSize]="30">
             <!-- additional container is required for shadow, since nothing can be seen outside of virtual scroller -->
             <div class="gallery-content">
               <div *cdkVirtualFor="let file of files2Show">
-                    <!-- This has to be its own component -->
-                <div class="image" >
+                <!-- This has to be its own component -->
+                <div class="image">
                   <!-- <app-secure-image class="image-view" [src]="file.url" -->
-                  <app-secure-image class="image-view" [src]="setViewUrl(file)"
-                    
-                                    (click)="openImageDialog(file)"></app-secure-image>
-                  <mat-checkbox (change)="addRemoveFiles(file)" [ngModel]="selectAll"></mat-checkbox> 
+                  <app-secure-image class="image-view" [src]="setViewUrl(file)" (click)="openImageDialog(file)">
+                  </app-secure-image>
+                  <mat-checkbox (change)="addRemoveFiles(file)" [ngModel]="selectAll"></mat-checkbox>
                   <!--  [(ngModel)]="selectAll" selectedItems -->
                 </div>
               </div>
             </div>
           </cdk-virtual-scroll-viewport>
-            <!-- Carousel -->
-            <!-- <app-image-carousel></app-image-carousel> -->
+          <!-- Carousel -->
+          <!-- <app-image-carousel></app-image-carousel> -->
         </ng-container>
         <ng-template #noFiles>
           <p class="no-files">No files are found</p>
@@ -160,4 +155,3 @@
 </div>
 
 <mat-spinner *ngIf="isLoading"></mat-spinner>
-

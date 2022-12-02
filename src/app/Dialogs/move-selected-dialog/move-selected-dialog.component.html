@@ -13,7 +13,7 @@
            [matAutocomplete]="auto">
     <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
       <mat-option *ngFor="let option of options" [value]="this.option.name"
-                  (onSelectionChange)="onShopSelectionChanged(option)">
+                  (onSelectionChange)="onDestinationAlbumSelected(option)">
         {{option.name}}
       </mat-option>
     </mat-autocomplete>

@@ -3,10 +3,11 @@ import {HttpClient} from '@angular/common/http';
 import {Observable, Subject} from 'rxjs';
 import {Post} from '../DataModels/post.model';
 import {map, tap} from 'rxjs/operators';
-import {host} from '../globals';
+import {hostApi} from '../globals';
 
 @Injectable({providedIn: 'root'})
 export class PostService {
+  private hostApiPost = hostApi + '/post/';
   private posts: Post[] = []; // albums array
   private post: Post;
   private postUpdated = new Subject<Post[]>(); // is subject we want to observe
@@ -21,7 +22,7 @@ export class PostService {
    * @param post
    */
   addPost(userName, post) {
-    const request = this.http.post<{ post: Post }>(host + '/api/posts/post/', {UserName: userName, Post: post})
+    const request = this.http.post<{ post: Post }>(this.hostApiPost + 'post/', {UserName: userName, Post: post})
       .pipe(tap(console.log), map((serverResponse => serverResponse)))
       .subscribe((data) => {
         console.log('Received Data:' + data);
@@ -43,7 +44,7 @@ export class PostService {
    * method responsible to retrieve all posts.
    */
   getAllPosts() {
-    return this.http.get(host + '/api/posts/posts/')
+    return this.http.get(this.hostApiPost + 'posts/')
       .pipe(tap(console.log), map(serverResponse => serverResponse)) // we re-edit the information to remove the  messages
       .subscribe(files => {
           this.posts = files;
@@ -58,7 +59,7 @@ export class PostService {
    * @param postId
    */
   likePost(postId) {
-    return this.http.post(host + '/api/posts/like/', {UserName: 'NONE!', Post: postId})
+    return this.http.post(this.hostApiPost + 'like/', {UserName: 'NONE!', Post: postId})
       .pipe(tap(console.log), map((serverResponse => serverResponse)))
       .subscribe((data) => {
           console.log('Received Data:' + data);
@@ -76,7 +77,7 @@ export class PostService {
    * @param postId
    */
   postComment(comment, postId) {
-    return this.http.post(host + '/api/posts/comment/', {Comment: comment, PostobjId: postId})
+    return this.http.post(this.hostApiPost + 'comment/', {Comment: comment, PostobjId: postId})
       .pipe(tap(console.log), map((serverResponse => serverResponse)))
       .subscribe((data) => {
           console.log('Received Data:' + data);
@@ -93,7 +94,7 @@ export class PostService {
    * @param postID
    */
   public deletePost(postID: string) {
-    this.http.delete(host + '/api/posts/delete_post/' + postID) // pass album id as parameter
+    this.http.delete(this.hostApiPost + 'delete_post/' + postID) // pass album id as parameter
       .subscribe(() => {
         console.log('deleted!');
         const updatePosts = this.posts.filter(post => post.id !== postID); // we remove the album from our list

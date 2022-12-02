@@ -22,6 +22,7 @@ import { element } from 'protractor';
 import { MoveCopySelectedDialogComponent } from '../../Dialogs/move-selected-dialog/move-selected-dialog.component';
 import { NewAlbumDialogComponent } from '../../Dialogs/new-album-dialog/new-album-dialog.component';
 import { OptionButtonsService } from 'src/app/Services/tool-bar-buttons.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-album',
@@ -93,15 +94,17 @@ export class AlbumComponent implements OnInit, OnDestroy {
     this.optionButtons.setButtons(this.albumButtons);
     this.album_id = this.route.snapshot.paramMap.get('id'); // name we get trough param
     // console.log('this albums is' + this.album_Name);
+    var currentAlbum = `albumInfo_`;
     if (this.albumService.getAlbumSize()) {
       // ?
       // Sets album size in memory
+      currentAlbum = `albumInfo_${this.album_id}`;
       localStorage.setItem(
-        'album',
+        currentAlbum,
         JSON.stringify(this.albumService.getAlbumInfo(this.album_id))
       );
     }
-    this.albumInfo = JSON.parse(localStorage.getItem('album'));
+    this.albumInfo = JSON.parse(localStorage.getItem(currentAlbum));
 
     this.files = this.filesService.getFileUpdateListener();
     this.filesToUpload = this.filesService
@@ -120,23 +123,7 @@ export class AlbumComponent implements OnInit, OnDestroy {
     this.isLoading = false;
   }
 
-  private SetUploadProgress() {
-    this.progress = Math.round(
-      100 - (100.0 * this.filesToUploadNumber) / this.numberFilesTotal
-    );
-    if (this.progress === 100) {
-      this.uploading = false;
-    }
-  }
-
-  /**
-   * Image display component by MatDialog will be deleted in the future.
-   * @param URL
-   */
-  displayImage(URL) {
-    this.dialog.open(ImageDisplayComponent, { data: { url: URL } });
-  }
-
+ 
   /**
    * method that gothers all files selected creates formData and sends it to server
    * file by file
@@ -158,6 +145,27 @@ export class AlbumComponent implements OnInit, OnDestroy {
       }
     }
   }
+
+  // *****************
+
+  private SetUploadProgress() {
+    this.progress = Math.round(
+      100 - (100.0 * this.filesToUploadNumber) / this.numberFilesTotal
+    );
+    if (this.progress === 100) {
+      this.uploading = false;
+    }
+  }
+
+  /**
+   * Image display component by MatDialog will be deleted in the future.
+   * @param URL
+   */
+  displayImage(URL) {
+    this.dialog.open(ImageDisplayComponent, { data: { url: URL } });
+  }
+
+  
 
   /**
    * this function useses the file service to del file
@@ -363,7 +371,7 @@ export class AlbumComponent implements OnInit, OnDestroy {
         this.albumService.createNewAlbum(album).subscribe((createdAlbum) => {
           this.albumService.copyFilesToExistingAlbum(
             this.albumInfo.albumId,
-            createdAlbum.id,
+            createdAlbum.albumId,
             itemsToCopy
           );
         });
@@ -397,13 +405,10 @@ export class AlbumComponent implements OnInit, OnDestroy {
         //console.dir('this selected' + this.selectedItems);
 
         this.albumService.createNewAlbum(album).subscribe((createdAlbum) => {
-          /*  console.log('response from server:');
-            console.dir(response);
-            console.log(response.objId);
-           */
+
           this.albumService.moveFilesToExistingAlbum(
             this.albumInfo.albumId,
-            
+            //null,
             createdAlbum.albumId,
             itemsToMove
           );

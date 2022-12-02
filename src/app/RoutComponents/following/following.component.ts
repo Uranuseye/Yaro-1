@@ -23,6 +23,7 @@ export class FollowingComponent implements OnInit {
       .subscribe(
         data => {
           this.users2Show = data;
+          debugger;
           this.users2Show = this.users2Show.filter(user => user.isFollowing);
         });
   }

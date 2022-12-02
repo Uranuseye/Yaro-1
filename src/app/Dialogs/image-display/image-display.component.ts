@@ -1,15 +1,15 @@
-import { HttpEventType, HttpResponse } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FileObject, ExifObject } from 'src/app/DataModels/fileObject.model';
-import { host } from 'src/app/globals';
-import { DownloadServiceService } from 'src/app/Services/download-service.service';
-import { log } from 'util';
+import { HttpEventType, HttpResponse } from "@angular/common/http";
+import { Component, Inject, OnInit } from "@angular/core";
+import { MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { FileObject, ExifObject } from "src/app/DataModels/fileObject.model";
+import { hostApi } from "src/app/globals";
+import { DownloadServiceService } from "src/app/Services/download-service.service";
+import { log } from "util";
 //import * as ol from 'ol';
 // --------
-import { saveAs } from 'file-saver';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { FileService } from 'src/app/Services/files.service';
+import { saveAs } from "file-saver";
+import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
+import { FileService } from "src/app/Services/files.service";
 // import Map from 'ol/Map';
 // import View from 'ol/View';
 // import VectorLayer from 'ol/layer/Vector';
@@ -21,12 +21,12 @@ import { FileService } from 'src/app/Services/files.service';
 
 let map: any;
 declare var ol: any;
-const videoExt = '.mp4';
-const imgExt = '.webp';
+const videoExt = ".mp4";
+const imgExt = ".webp";
 
 @Component({
-  templateUrl: './image-display.component.html',
-  styleUrls: ['./image-display.component.scss'],
+  templateUrl: "./image-display.component.html",
+  styleUrls: ["./image-display.component.scss"],
 })
 export class ImageDisplayComponent implements OnInit {
   public dataImages: FileObject[];
@@ -38,11 +38,11 @@ export class ImageDisplayComponent implements OnInit {
   public displayGpsLocation = false;
   public latitude: any;
   public longitude: any;
-  public downloadMessage = 'Nothing Yet';
+  public downloadMessage = "Nothing Yet";
   map: any;
   message: string;
   private src: string;
-  imageURL:SafeUrl;
+  imageURL: SafeUrl;
   image: Blob;
 
   constructor(
@@ -82,69 +82,66 @@ export class ImageDisplayComponent implements OnInit {
   }
 
   handleGpsDisplay() {
-    console.log('Handling Gps Display');
-    if (this.exif != null && this.exif.gpsLatitude ) {
-
+    console.log("Handling Gps Display");
+    if (this.exif != null && this.exif.gpsLatitude) {
       this.SetDdCoordinates();
 
-      console.log('!!! this is GPS:  ' + this.latitude + ':' + this.longitude);
+      console.log("!!! this is GPS:  " + this.latitude + ":" + this.longitude);
 
       if (this.latitude > 0) {
-
         this.displayGpsLocation = true;
-        console.log('there are cordinates' + this.displayGpsLocation);
+        console.log("there are cordinates" + this.displayGpsLocation);
 
         const mousePositionControl = new ol.control.MousePosition({
           coordinateFormat: ol.coordinate.createStringXY(4),
-          projection: 'EPSG:4326',
+          projection: "EPSG:4326",
           // comment the following two lines to have the mouse position
           // be placed within the map.
-          className: 'custom-mouse-position',
-          target: document.getElementById('mouse-position'),
-          undefinedHTML: '&nbsp;'
+          className: "custom-mouse-position",
+          target: document.getElementById("mouse-position"),
+          undefinedHTML: "&nbsp;",
         });
 
-
-
         this.map = new ol.Map({
-          target: 'map',
-           controls: ol.control.defaults({
-            attributionOptions: {
-              collapsible: true
-            }
-          }).extend([mousePositionControl]),
+          target: "map",
+          controls: ol.control
+            .defaults({
+              attributionOptions: {
+                collapsible: true,
+              },
+            })
+            .extend([mousePositionControl]),
           layers: [
             new ol.layer.Tile({
-              source: new ol.source.OSM()
-            })
+              source: new ol.source.OSM(),
+            }),
           ],
           view: new ol.View({
-            center: ol.proj.fromLonLat([
-              this.longitude,
-              this.latitude,
-            ]),
+            center: ol.proj.fromLonLat([this.longitude, this.latitude]),
             zoom: 8,
           }),
-
         });
       }
     } else {
-      console.log('No this.exif');
+      console.log("No this.exif");
     }
   }
   SetDdCoordinates(): any {
-
-    this.latitude = this.SetDdCoordinate(this.exif.gpsLatitude, this.exif.gpsLatitudeRef);
-    this.longitude = this.SetDdCoordinate(this.exif.gpsLongitude, this.exif.gpsLongitudeRef);
+    this.latitude = this.SetDdCoordinate(
+      this.exif.gpsLatitude,
+      this.exif.gpsLatitudeRef
+    );
+    this.longitude = this.SetDdCoordinate(
+      this.exif.gpsLongitude,
+      this.exif.gpsLongitudeRef
+    );
   }
 
-
-  SetDdCoordinate(DMScoordinat: string , DMSref: string) {
-    const coorNumStr = DMScoordinat.replace(/[^\d.-]/g, ' ');
+  SetDdCoordinate(DMScoordinat: string, DMSref: string) {
+    const coorNumStr = DMScoordinat.replace(/[^\d.-]/g, " ");
     const cdd = this.parseToLat(coorNumStr, DMSref);
-   return cdd;
+    return cdd;
   }
-
 
   goToNextItem(n: number) {
     //this.hideGPSDisplay();
@@ -187,7 +184,6 @@ export class ImageDisplayComponent implements OnInit {
     // }
   }
 
-
   /**
    * show hide exif toggle
    */
@@ -196,12 +192,12 @@ export class ImageDisplayComponent implements OnInit {
     this.hideGPSDisplay();
   }
 
-  showPreview2(fileId:string){
+  showPreview2(fileId: string) {
     this.src = fileId;
-    console.warn('https://localhost:5001/api/Data/Preview');
     console.warn("----- This file Id: " + fileId);
-    
-    if (false ){ //|| this.isBase64(fileId)) {
+
+    if (false) {
+      //|| this.isBase64(fileId)) {
       this.imageURL = fileId;
     } else {
       this.filesService.loadPreview(fileId).subscribe((i) => {
@@ -232,7 +228,7 @@ export class ImageDisplayComponent implements OnInit {
   // }
 
   private setVideoUrl(file: FileObject, url: string) {
-    console.log('setVideoUrl(file: FileObject, url: string)');
+    console.log("setVideoUrl(file: FileObject, url: string)");
     console.warn(file);
     if (file.processingType === 2) {
       url = url.replace(`.PR${imgExt}`, videoExt);
@@ -246,7 +242,7 @@ export class ImageDisplayComponent implements OnInit {
    * @param direction
    */
   parseToLat(gpsCordinates, direction) {
-    const gps = gpsCordinates.split('  ');
+    const gps = gpsCordinates.split("  ");
     console.dir(gps);
 
     const d = +gps[0]; // 60 ** 0
@@ -260,20 +256,19 @@ export class ImageDisplayComponent implements OnInit {
   }
 
   makeServerUrl(file: FileObject) {
-    console.log('makeServerUrl(file: FileObject)');
+    console.log("makeServerUrl(file: FileObject)");
     console.warn(file);
-    let url = `${host}/SERVER/${this.getSlashedId(file.objId)}.PR${imgExt}`;
+    let url = `${hostApi}/SERVER/${this.getSlashedId(file.objId)}.PR${imgExt}`;
     url = this.setVideoUrl(file, url);
     console.warn(url);
     return url;
-    // https://localhost:5001/SERVER/84\\3B\\1E\\61\\BF\\EB\\31\\89\\21\\3C\\53\\D4\\05\\A6\\AC\\73\\30\\40\\B5\\DD\\3B\\7C\\2C\\5A\\86\\79\\FE\\83\\20\\D6\\04\\B5.TH.webp
-  }
+    }
 
   getSlashedId(hash64: string) {
-    let tmp = '';
+    let tmp = "";
 
     for (let i = 0; i < hash64.length; i = i + 2) {
-      tmp += hash64.slice(i, i + 2) + '/';
+      tmp += hash64.slice(i, i + 2) + "/";
     }
 
     // remove last "\" and return
@@ -284,36 +279,42 @@ export class ImageDisplayComponent implements OnInit {
 
   download() {
     //const id:string ="";
-    this.downladService.downloadFile(this.dataImages[this.currentIndex].objId)
-        .subscribe((response) => {
-          if (response.type === HttpEventType.Response) {
-            console.log('response');
-            console.warn(response);
-            this.message = 'Download success.';
-            const downloadedFile = new Blob([response.body], { type: response.body.type });
-            // console.log("downloadedFile");
-            // console.warn(downloadedFile);
-            // const url = URL.createObjectURL(downloadedFile);
-            // console.log("url");
-            // console.warn(url);
-            saveAs(downloadedFile, this.dataImages[this.currentIndex].fileName + this.dataImages[this.currentIndex].fileExtension);
+    this.downladService
+      .downloadFile(this.dataImages[this.currentIndex].objId)
+      .subscribe((response) => {
+        if (response.type === HttpEventType.Response) {
+          console.log("response");
+          console.warn(response);
+          this.message = "Download success.";
+          const downloadedFile = new Blob([response.body], {
+            type: response.body.type,
+          });
+          // console.log("downloadedFile");
+          // console.warn(downloadedFile);
+          // const url = URL.createObjectURL(downloadedFile);
+          // console.log("url");
+          // console.warn(url);
+          saveAs(
+            downloadedFile,
+            this.dataImages[this.currentIndex].fileName +
+              this.dataImages[this.currentIndex].fileExtension
+          );
 
-            //window.open(response.url);
-            //this.downloadFile(response);
-            // window.location.href = response.url;
-            // this.downloadMessage = response['message'];
-          }
-
-    }),
-      (error: any) => console.log('Error downloading the file'),
-      () => console.info('File downloaded successfully');
+          //window.open(response.url);
+          //this.downloadFile(response);
+          // window.location.href = response.url;
+          // this.downloadMessage = response['message'];
+        }
+      }),
+      (error: any) => console.log("Error downloading the file"),
+      () => console.info("File downloaded successfully");
   }
 
   // private downloadFile = (data: HttpResponse<Blob>) => {
   //   const downloadedFile = new Blob([data.body], { type: data.body.type });
   //   const url = URL.createObjectURL(downloadedFile);
   //   window.open(url);
-	// 	// fileSaver.saveAs(downloadedFile,
+  // 	// fileSaver.saveAs(downloadedFile,
   //   //    this.dataImages[this.currentIndex].FileName + this.dataImages[this.currentIndex].FileExtension);
 
   //   //window.open(url);

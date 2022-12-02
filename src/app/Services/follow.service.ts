@@ -4,12 +4,15 @@ import { Post } from "../DataModels/post.model";
 import { map, tap } from "rxjs/operators";
 import { Subject } from "rxjs";
 import { Users } from "../DataModels/users.model";
-import { host } from "../globals";
+import { hostApi } from "../globals";
 
 @Injectable({
   providedIn: "root",
 })
 export class FollowService {
+  private hostApiFollow = hostApi + '/follow/';
+  
+
   //public currentlocalhost = 'https://localhost:5001';
   private users: Users[] = []; // albums array
 
@@ -43,15 +46,14 @@ export class FollowService {
    * method responsible to get follow users
    */
   getUsers() {
-    debugger;  // eslint-disable-line no-debugger
     return this.http
-      .get(host + "/api/follow/users/")
+      .get(this.hostApiFollow+ 'GetAllUsers/')
       .pipe(
         // tap(console.log),
         map((serverResponse) => serverResponse)
       ) // we re-edit the information to remove the  messages
-      .subscribe((files: Users[]) => {
-        this.users = files;
+      .subscribe((usersList: Users[]) => {
+        this.users = usersList;
         //console.log(JSON.stringify(this.users));
         this.usersUpdated.next(this.users); // we return the information trough observable
       });
@@ -61,7 +63,7 @@ export class FollowService {
    */
   getFollowingUsers() {
     return this.http
-      .get(host + "/api/follow/followers/")
+      .get(this.hostApiFollow+ 'followers/')
       .pipe(
         tap(console.log),
         map((serverResponse) => serverResponse)
@@ -80,7 +82,7 @@ export class FollowService {
   followUser(userIdToFolow) {
     console.log(`followUser(${userIdToFolow}) `)
     const request = this.http
-      .post<{ post: Post }>(host + "/api/follow/follow/", { objId: userIdToFolow })
+      .post<{ post: Post }>(this.hostApiFollow+ 'follow/', { objId: userIdToFolow })
       .pipe(
         // tap(console.log),
         map((serverResponse) => serverResponse)
@@ -102,7 +104,7 @@ export class FollowService {
    */
   unFollowUser(userID) {
     const request = this.http
-      .post<{ post: Post }>(host + "/api/follow/unfollow/", { objId: userID })
+      .post<{ post: Post }>(this.hostApiFollow+ 'unfollow/', { objId: userID })
       .pipe(
         // tap(console.log),
         map((serverResponse) => serverResponse)

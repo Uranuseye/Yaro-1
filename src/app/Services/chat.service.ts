@@ -4,12 +4,13 @@ import { Subject } from 'rxjs';
 import { AlbumModel } from '../DataModels/album.model';
 import { ChatMessage } from '../DataModels/chat-message.model';
 import { map, tap } from 'rxjs/operators';
-import { host } from '../globals';
+import { hostApi } from '../globals';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ChatService {
+  private hostApiMessage = hostApi + '/message/';
   private messages: ChatMessage[] = []; // albums array
   private message: ChatMessage;
   private unreadMessageSize: number;
@@ -38,7 +39,7 @@ export class ChatService {
    */
   sendMessage(msg: ChatMessage) {
     this.http
-      .post(host + '/api/message/message/', msg)
+      .post(this.hostApiMessage + 'message/', msg)
       .pipe(
         tap(console.log),
         map((serverResponse) => serverResponse)
@@ -58,7 +59,7 @@ export class ChatService {
   getConversation(receiverID) {
     console.log(`getConversation(${receiverID})`);
     this.http
-      .get(host + '/api/message/messages/' + receiverID)
+      .get(this.hostApiMessage + 'messages/' + receiverID)
       .pipe(
         tap(console.log),
         map((serverResponse) => serverResponse)
@@ -82,7 +83,7 @@ export class ChatService {
    */
   getUnreadMessageSize() {
     this.http
-      .get(host + '/api/message/unread_messages/' + 'something')
+      .get(this.hostApiMessage + 'unread_messages/' + 'something')
       .pipe(
         tap(console.log),
         map((serverResponse) => serverResponse)

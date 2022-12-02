@@ -17,6 +17,7 @@ export class MessageRecipientComponent implements OnInit {
   ngOnInit() {
     this.followService.getUsers();
     this.recipients = this.followService.getUsersUpdateListener();
+    debugger;
   }
 
 }

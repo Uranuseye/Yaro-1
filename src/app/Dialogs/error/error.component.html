@@ -2,6 +2,15 @@
 <div mat-dialog-content>
   <p class="mat-body-1">{{ data?.message }}</p>
 </div>
+<div mat-dialog-content>
+  <p class="mat-body-1">{{ this.messageText }}</p>
+</div>
+  <div mat-dialog-content>
+  <p class="mat-body-1">{{data?.errorResponse }}</p>
+</div>
+  <div mat-dialog-content>
+  <p class="mat-body-1">{{errorResponseTextLines}}</p> 
+</div>
 <div mat-dialog-actions>
   <button mat-raised-button mat-dialog-close>Okay</button>
 </div>

@@ -5,7 +5,7 @@ import { map, tap } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
 // import {Users} from '../DataModules/users.model';
 import { GroupModel } from '../DataModels/group-model';
-import { host } from '../globals';
+import { hostApi } from '../globals';
 import { Router } from '@angular/router';
 
 import { AlbumModel } from '../DataModels/album.model';
@@ -49,9 +49,10 @@ export class GroupService {
     console.log('GroupService.delete:  invoked');
     return this.http.delete(this.getUrlWithId(group.id));
   }
+  
 
   private getUrl() {
-    return `${host}/api/${this.model}`;
+    return `${hostApi}/${this.model}`;
   }
 
   private getUrlWithId(objId: string) {

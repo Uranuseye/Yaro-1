@@ -3,12 +3,13 @@ import {Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {map, tap} from 'rxjs/operators';
 import {NotificationModel} from '../DataModels/notification.model';
-import {host} from '../globals';
+import {hostApi} from '../globals';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
+  private hostApiNotifications = hostApi + '/notification/';
   private notifications: NotificationModel[] = [];
   private unreadNotificationSize: number;
   private notificationUpdated = new Subject<NotificationModel[]>();
@@ -44,7 +45,7 @@ export class NotificationService {
    * method responsible to het users notiffication from the server
    */
   getUserNotification() {
-    return this.http.get(host + '/api/notification/notifications/')
+    return this.http.get(this.hostApiNotifications + 'notifications/')
       .pipe(//tap(console.log),
        map(serverResponse => serverResponse)) // we re-edit the information to remove the  messages
       .subscribe((files :NotificationModel[]) => {
@@ -61,7 +62,7 @@ export class NotificationService {
    * @param nottificationId
    */
   public deleteNotification(nottificationId: string) {
-    this.http.delete(host + '/api/notification/delete_notification/' + nottificationId) // pass album id as parameter
+    this.http.delete(this.hostApiNotifications + 'delete_notification/' + nottificationId) // pass album id as parameter
       .subscribe(() => {
         // console.log('deleted!');
         const updateNotifications = this.notifications.filter(not => not.id !== nottificationId); // we remove the album from our list
@@ -79,15 +80,15 @@ export class NotificationService {
     this.notifications[objIndex].read = true;
     this.notificationUpdated.next([...this.notifications]);
     this.getUnreadNotificationsSize();
-    return this.http.post(host + '/api/notification/mark_read/', {notificationobjId: nottificationId})
+    return this.http.post(this.hostApiNotifications + 'mark_read/', {notificationobjId: nottificationId})
       .pipe(//tap(console.log), 
       map((serverResponse => serverResponse)))
       .subscribe((data) => {
           // console.log('Received Data:' + data);
           // console.dir(data);
-          /*          this.posts.unshift(data);
-                    this.postUpdated.next([...this.posts]);
-                    console.dir(this.posts);*/
+                  //  this.posts.unshift(data);
+                  //   this.postUpdated.next([...this.posts]);
+                  //   console.dir(this.posts);
         }
       );
   }
@@ -101,7 +102,7 @@ export class NotificationService {
     });
     this.notificationUpdated.next([...this.notifications]);
     this.getUnreadNotificationsSize();
-    return this.http.post(host + '/api/notification/mark_all_read/', null)
+    return this.http.post(this.hostApiNotifications + 'mark_all_read/', null)
       .pipe(//tap(console.log),
        map((serverResponse => serverResponse)))
       .subscribe((data) => {

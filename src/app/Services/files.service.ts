@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEventType } from '@angular/common/http';
 import { map, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { FileObject } from '../DataModels/fileObject.model';
 //import { AlbumModel } from '../DataModels/album.model';
-import { host } from '../globals';
+import { hostApi } from '../globals';
 import { NewAlbumDialogComponent } from '../Dialogs/new-album-dialog/new-album-dialog.component';
 import { AlbumModel } from '../DataModels/album.model';
 //import { forEachComment } from 'tslint';
@@ -13,12 +13,20 @@ import { AlbumModel } from '../DataModels/album.model';
 // by the root application injector.
 @Injectable({ providedIn: 'root' })
 export class FileService {
-  private dataApi: string = host + '/api/data/';
+  private hostApiData: string = hostApi + '/data/';
+
+  color = 'primary';
+  mode = 'determinate';
+  // value:any=0
+
 
   private files: FileObject[] = []; // files array of type FileObject (interface)
   private sortedFiles: FileObject[] = [];
   //private filesTodelete: string[] = [];
   private filesUpdatedList = new BehaviorSubject<FileObject[]>(this.files); // filesUpdated is the subject with BehaviorSubject returns files
+  progress: number;
+  value: any;
+  ip: string;
   // Should be in config
   //public currentlocalhost = "https://localhost:5001";
 
@@ -41,6 +49,34 @@ export class FileService {
     this.filesUpdatedList.next(null);
   }
 
+
+  uploadFile2(/* albumobjId: string, */ formData: FormData) {
+    console.warn(formData); // log for debug will be removed in the future
+
+    const request$ = this.http
+      .post(this.hostApiData + 'uploadfile', formData, {
+        reportProgress: true,
+        observe: 'events',
+      })
+      .subscribe(
+        (event) => {
+          //send success response
+          debugger;
+          if (event.type === HttpEventType.UploadProgress) {
+            this.progress = Math.round((100 * event.loaded) / event.total);
+            this.value = this.progress;
+          } else if (event.type == HttpEventType.Response) {
+            console.log(`HttpEventType.Response ${event.body}`);
+          }
+        }
+        /*
+        , (err) => {
+        //send error response
+      }
+        */
+      );
+  }
+
   /**
    * method responsible to upload files to the server
    *
@@ -51,7 +87,7 @@ export class FileService {
     console.log(formData); // log for debug will be removed in the future
 
     const request$ = this.http
-      .post(this.dataApi + 'uploadfile', formData, { reportProgress: true })
+      .post(this.hostApiData + 'upload_file', formData, { reportProgress: true })
       // the server returns the file object that was entered the db
       .pipe(
         tap(console.log),
@@ -78,7 +114,7 @@ export class FileService {
   uploadAvatar(formData: FormData) {
     // console.log(formData); // log for debug will be removed in the future
     return this.http.post<{ url: string }>(
-      this.dataApi + 'avatar',
+      this.hostApiData + 'avatar',
       formData,
       { reportProgress: true }
     );
@@ -103,7 +139,7 @@ export class FileService {
   getFiles(albumId: string) {
     const getFileSubs = this.http
       .get<{ message: string; files: any }>(
-        this.dataApi + 'getAlbumFiles/' + albumId
+        this.hostApiData + 'getAlbumFiles/' + albumId
       )
       .pipe(
         tap(console.log),
@@ -119,13 +155,13 @@ export class FileService {
   }
 
   loadThumbnail(src: string) {
-    return this.http.get(this.dataApi + 'thumbnail/' + src, {
+    return this.http.get(this.hostApiData + 'thumbnail/' + src, {
       responseType: 'blob',
     });
   }
 
   loadPreview(src: string) {
-    return this.http.get(this.dataApi + 'preview/' + src, {
+    return this.http.get(this.hostApiData + 'preview/' + src, {
       responseType: 'blob',
     });
   }
@@ -152,11 +188,11 @@ export class FileService {
   ) {
     const fileToDelete = {
       ListOfFilesToDelete: listOfFilesToDelete,
-      Album: null,
+      //Album: null,
       LooseOwnership: looseOwnership,
     };
     this.http
-      .post(host + '/api/data/deleteFileFromAllMyAlbums/', fileToDelete)
+      .post(this.hostApiData + 'deleteFileFromAllMyAlbums/', fileToDelete)
       .subscribe(() => {
         console.log('delFromAllUserDb - deleted!');
 
@@ -177,7 +213,7 @@ export class FileService {
       ListFileIds: files,
     };
     this.http
-      .post(host + '/api/data/share_selected/', fileToShare)
+      .post(this.hostApiData + 'share_selected/', fileToShare)
       .subscribe(() => {
         console.log('files Shared!');
       });
@@ -190,7 +226,7 @@ export class FileService {
       ListFileIds: listOfFiles,
     };
     this.http
-      .post(host + '/api/data/setOwner_selected/', ownership)
+      .post(this.hostApiData + 'setOwner_selected/', ownership)
       .subscribe(() => {
         console.log('setOwnership - done!');
       });

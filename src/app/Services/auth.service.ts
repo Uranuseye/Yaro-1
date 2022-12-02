@@ -12,7 +12,7 @@ import {AlbumModel} from '../DataModels/album.model';
 import {Users} from '../DataModels/users.model';
 import {map, tap} from 'rxjs/operators';
 import {SignalrService} from './signalr.service';
-import {host} from '../globals';
+import {hostApi} from '../globals';
 
 // Service is always decorated with @Injectable with providedIn root
 
@@ -20,6 +20,8 @@ import {host} from '../globals';
 
 
 export class AuthenticationService {
+  private hostApiAuthentication = hostApi + '/Auth/';
+  
   private isAuthenticated = JSON.parse(localStorage.getItem('loggedIn') || 'false'); // init is Authenticated with false
   private token = (localStorage.getItem('token') || 'null'); // token is of type string
   private userName = (localStorage.getItem('userName') || 'null');
@@ -119,7 +121,7 @@ export class AuthenticationService {
     this.uiService.loadingChanged.next(true);
     const authData: AuthData = {email: email, username: email, password: password, firstName: firstName, lastName: lastName};
 
-    this.http.post(host + '/api/Auth/register', authData)
+    this.http.post(this.hostApiAuthentication + 'register', authData)
       .subscribe(serverResponse => {
         console.log(serverResponse); // log in favor of debug
         this.uiService.loadingChanged.next(false);
@@ -135,10 +137,10 @@ export class AuthenticationService {
    * method responsible to retrieve all registered users
    */
   getRegisteredUser() {
-    return this.http.get(host + '/api/auth/users/')
+    return this.http.get(this.hostApiAuthentication + 'users/')
       .pipe(tap(console.log), map(serverResponse => serverResponse)) // we re-edit the information to remove the  messages
-      .subscribe(files => {
-          this.users = files;
+      .subscribe(usersList => {
+          this.users = usersList;
           console.log(JSON.stringify(this.users));
           this.usersUpdated.next(this.users); // we return the information trough observable
         }
@@ -151,7 +153,7 @@ export class AuthenticationService {
    */
   getUserById(id) {
     console.warn(`getUserById ${id}`);
-    return this.http.get<{ Id: string, FirstName: string, LastName }>(host + '/api/auth/user/' + id)
+    return this.http.get<{ Id: string, FirstName: string, LastName }>(this.hostApiAuthentication + 'user/' + id)
       .pipe(tap(console.warn), map(serverResponse => serverResponse));
   }
 
@@ -166,7 +168,7 @@ export class AuthenticationService {
     this.uiService.loadingChanged.next(true);
     const authData: AuthData = {email: email, username: email, password: password, firstName: 'null', lastName: 'null'};
 
-    this.http.post<{ token: string, userName: string, userID: string, avatar: string }>(host + '/api/auth/login', authData)
+    this.http.post<{ token: string, userName: string, userID: string, avatar: string }>(this.hostApiAuthentication + 'login', authData)
       .subscribe(serverResponse => {
         this.onLoginSubscriptionResponce(serverResponse);
         // navigates to the /albums component

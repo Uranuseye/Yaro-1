@@ -6,7 +6,7 @@ import {Post} from '../../DataModels/post.model';
 import {PostService} from '../../Services/post.service';
 import {HubConnection, HubConnectionBuilder} from '@aspnet/signalr';
 import {AuthenticationService} from '../../Services/auth.service';
-import { host } from 'src/app/globals';
+import { hostApi } from 'src/app/globals';
 
 @Component({
   selector: 'app-posts-container',
@@ -14,6 +14,7 @@ import { host } from 'src/app/globals';
   styleUrls: ['./posts-container.component.scss']
 })
 export class PostsContainerComponent implements OnInit, OnDestroy {
+  private hostApiNotification = `${hostApi}/notiffication`;
   posts: Observable<Post[]>;
   creator;
   hubConnection: HubConnection;
@@ -35,7 +36,7 @@ export class PostsContainerComponent implements OnInit, OnDestroy {
   public startConnection = () => {
     console.log('The User that is on signalR is');
     this.hubConnection = new HubConnectionBuilder()
-      .withUrl(`${host}/notiffication`)
+      .withUrl(this.hostApiNotification)
       .build();
 
     this.hubConnection.start().then(() => {

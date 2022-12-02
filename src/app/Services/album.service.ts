@@ -4,13 +4,16 @@ import {HttpClient} from '@angular/common/http';
 import {Subject} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Router} from '@angular/router';
-import {host} from '../globals';
+import {hostApi} from '../globals';
 
 @Injectable({ providedIn: 'root' }) // we inject services to the service
 /**
  * Album service module
  */
 export class AlbumService {
+  private hostApiAlbum: string = hostApi + '/Album/';
+  private hostApiData: string = hostApi + '/Data/';
+
   private albums: AlbumModel[] = []; // albums array
   private album: AlbumModel;
   private albumsUpdated = new Subject<AlbumModel[]>(); // albumsUpdated is subject we want to observe
@@ -75,7 +78,7 @@ export class AlbumService {
   getAlbums() {
     this.http
       .get<{ message: string; albums: AlbumModel[] }>(
-        host + '/api/album/getAlbums'
+        this.hostApiAlbum+ 'getAlbums'
       )
       .pipe(
         map((albumData) => {
@@ -111,14 +114,14 @@ export class AlbumService {
     // id passed as param
     // tslint:disable-next-line:max-line-length
     return this.http
-      .get<AlbumModel>(host + '/api/album/getAlbumContent/' + albumId)
+      .get<AlbumModel>(this.hostApiAlbum+ 'getAlbumContent/' + albumId)
       .pipe(
         map((albumData) => {
           console.log(albumData);
           return {
             name: albumData.name,
             info: albumData.info,
-            id: albumData.albumId,
+            albumId: albumData.albumId,
             creator: albumData.creator,
             dateCreated: albumData.dateCreated.toString(),
             //files: albumData.files,
@@ -143,13 +146,13 @@ export class AlbumService {
 
     this.http
       .post<{ message: string; albumId: string }>(
-        host + '/api/album/create_album',
+        this.hostApiAlbum+ 'create_album',
         album
       )
       .subscribe((responseData) => {
         console.warn('responseData');
         console.warn(responseData);
-        console.debug(responseData);
+        console.warn(responseData);
         // we receive back from the server the album id that was just added
         album.albumId = responseData.albumId; // init the album id with the id we received from server
         console.log(
@@ -169,7 +172,7 @@ export class AlbumService {
   createNewAlbum(albumObj: AlbumModel) {
     const album: AlbumModel = albumObj;
     return this.http.post<{ albumId: string }>(
-      host + '/api/album/create_album',
+      this.hostApiAlbum+ 'create_album',
       album
     );
     // push the album to the array of albums
@@ -184,7 +187,7 @@ export class AlbumService {
   deleteAlbum(albumId: string) {
     // we send the album id of the album we want to delete
     this.http
-      .delete(host + '/api/album/delete_album/' + albumId) // pass album id as parameter
+      .delete(this.hostApiAlbum+ 'delete_album/' + albumId) // pass album id as parameter
       .subscribe(() => {
         console.log('deleted!');
         // we remove the album from our list
@@ -203,7 +206,7 @@ export class AlbumService {
    */
   getFilesCount(albumId: string) {
     return this.http.get<number>(
-      host + '/api/album/countItemsInAlbum/' + albumId
+      this.hostApiAlbum+ 'countItemsInAlbum/' + albumId
     );
   }
 
@@ -224,7 +227,7 @@ export class AlbumService {
       //creator: '',
     }; // init the album with the new album changes
     this.http
-      .put(host + '/api/album/update_album', albumUpdated) // pass put request to the server by id
+      .put(this.hostApiAlbum+ 'update_album', albumUpdated) // pass put request to the server by id
       .subscribe(() => {
         const updatedAlbums = [...this.albums]; // we init updated albums with fresh copy of albums
         const oldAlbumIndex = updatedAlbums.findIndex(
@@ -249,7 +252,7 @@ export class AlbumService {
     };
     console.dir(albumMoved);
     this.http
-      .post(host + '/api/album/move_album/', albumMoved)
+      .post(this.hostApiAlbum+ 'move_album/', albumMoved)
       .subscribe(() => {
         console.log('files Moved!');
       });
@@ -266,7 +269,7 @@ export class AlbumService {
       currentAlbum: currentAlbum,
       listOfFiles: files,
     };
-    this.http.post(host + '/api/album/copy_album/', albumCopy).subscribe(() => {
+    this.http.post(this.hostApiAlbum+ 'copy_album/', albumCopy).subscribe(() => {
       console.log('Files Copied To Existing Album!');
     });
   }
@@ -281,7 +284,7 @@ export class AlbumService {
       ListOfFilesToDelete: files,
     };
     this.http
-      .post(host + '/api/Data/deleteFilesFromSingleAlbum/', albumDelete)
+      .post(this.hostApiData + 'deleteFilesFromSingleAlbum/', albumDelete)
       .subscribe(() => {
         console.log('Files Deleted from Album!');
       });
@@ -294,7 +297,7 @@ export class AlbumService {
   delFileFromRecycleOnly(files: string[]) {
     const recycleDelete = { ListOfFilesToDelete: files };
     this.http
-      .post(host + '/api/data/empty_recycleBin/', recycleDelete)
+      .post(this.hostApiData + 'empty_recycleBin/', recycleDelete)
       .subscribe(() => {
         console.log('Recycle Bin - deleted!');
       });

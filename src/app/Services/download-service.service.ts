@@ -1,18 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 // import { Observable } from 'rxjs';+
-import { host } from '../globals';
+import { hostApi } from '../globals';
 import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DownloadServiceService {
+  private hostApiData = `${hostApi}/data/`;
+
   constructor(private http: HttpClient) {}
   
 
   downloadFile(id: string): any {
-    const theURL = `${host}/api/data/download/${id}`;
+    const theURL = `${this.hostApiData}download/${id}`;
     return this.http.get(theURL, {
       reportProgress: true,
       observe: 'events',
@@ -23,8 +25,7 @@ export class DownloadServiceService {
 
   
   downloadFile2(url: string): any {
-    //const theURL = `${host}/api/data/download/${id}`;
-    return this.http.get(url, {
+        return this.http.get(url, {
       reportProgress: true,
       observe: 'events',
       responseType: 'blob',

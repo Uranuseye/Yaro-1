@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import * as signalR from "@aspnet/signalr";
 import { Subject } from 'rxjs';
 import {SignalInfo, UserInfo} from '../DataModels/video.model';
-import {host} from '../globals';
+import {hostApi} from '../globals';
 
 
 @Injectable({
@@ -30,7 +30,7 @@ export class VideoService {
 
     // ths is the HUB connection setting
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(host + '/videostream')
+      .withUrl(hostApi + '/videostream')
       .build();
 
     // this is starting connection to HUB

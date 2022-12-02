@@ -18,7 +18,7 @@ export class MoveCopySelectedDialogComponent implements OnInit {
   private albumObservable: Observable<AlbumModel[]>;
 
   //something = '';
-  public selected:AlbumModel;
+  public selected: AlbumModel;
 
   constructor(
     private albumService: AlbumService,
@@ -29,8 +29,10 @@ export class MoveCopySelectedDialogComponent implements OnInit {
   ngOnInit() {
     this.albumService.getAlbums();
     this.albumObservable = this.albumService.getAlbumUpdateListener();
-    this.albumObservable.subscribe((albums:AlbumModel[]) => {
-      this.options = albums.filter((album:AlbumModel)=>{return album.name!=='Recycle Bin'});
+    this.albumObservable.subscribe((albums: AlbumModel[]) => {
+      this.options = albums.filter(
+        (album: AlbumModel) => album.name !== 'Recycle Bin'
+      );
     });
 
     this.albumObservable = this.myControl.valueChanges.pipe(
@@ -47,8 +49,7 @@ export class MoveCopySelectedDialogComponent implements OnInit {
     );
   }
 
-  onShopSelectionChanged(selected:AlbumModel):void {
-
+  onDestinationAlbumSelected(selected: AlbumModel): void {
     this.selected = selected; //.objId;
   }
 }
