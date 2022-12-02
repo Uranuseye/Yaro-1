@@ -7,6 +7,6 @@ export interface AlbumModel {
   creator?: string;
   info: string;
   dateCreated: string;
-  isSharedAlbum?:boolean; 
+  //isSharedAlbum?:boolean; 
   //files: string[];
 }
