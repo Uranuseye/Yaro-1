@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>Share {{data.length}} photos width? </h1>
+<h1 mat-dialog-title>Share {{data.numberOfItemsToShare}} photos width? </h1>
 <div mat-dialog-content>
   <p>Choose who to share width:</p>
 </div>
@@ -12,9 +12,9 @@
            [formControl]="myControl"
            [matAutocomplete]="auto">
     <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-      <mat-option *ngFor="let option of options" [value]="option.FirstName+' '+option.LastName"
+      <mat-option *ngFor="let option of options" [value]="option.userName +' : '+ option.firstName+' : '+option.lastName"
                   (onSelectionChange)="onShopSelectionChanged(option)">
-        {{option.FirstName + " " + option.LastName}}
+        {{option.userName+" "+option.firstName + " " + option.lastName}}
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>

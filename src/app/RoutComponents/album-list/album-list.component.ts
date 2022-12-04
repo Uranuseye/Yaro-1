@@ -37,7 +37,7 @@ export class AlbumListComponent implements OnInit, OnDestroy {
 
   private albumButtons = [
     {
-      buttonName: 'My Albums', buttonLink : '/albums',
+      buttonName: 'My Albums', buttonLink : '/album',
     },
     {
       buttonName: 'Add Album', buttonLink: '/album/create',

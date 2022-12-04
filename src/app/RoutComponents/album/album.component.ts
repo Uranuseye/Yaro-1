@@ -62,7 +62,7 @@ export class AlbumComponent implements OnInit, OnDestroy {
   private albumButtons = [
     {
       buttonName: 'My Albums',
-      buttonLink: '/albums',
+      buttonLink: '/album',
     },
     {
       buttonName: 'Add Album',
@@ -139,8 +139,9 @@ export class AlbumComponent implements OnInit, OnDestroy {
       for (const file of files) {
         console.dir(file);
         const fd = new FormData();
-        fd.append('AlbumId', this.albumInfo.albumId); // we append the album name to the file
-        fd.append('File', file);
+        fd.append('albumId', this.albumInfo.albumId); // we append the album name to the file
+        fd.append('file', file);
+        
         this.filesService.uploadFile(/* this.albumInfo.objId, */ fd); // every file in files array is send one by one
       }
     }
@@ -332,7 +333,7 @@ export class AlbumComponent implements OnInit, OnDestroy {
 
     const dialogRef = this.dialog.open(ShareSelectedDialogComponent, {
       width: '250px',
-      data: this.selectedItems,
+      data: {numberOfItemsToShare: this.selectedItems.length},
     });
     dialogRef.afterClosed().subscribe((result) => {
       console.log('dialog was closed');
@@ -422,10 +423,11 @@ export class AlbumComponent implements OnInit, OnDestroy {
     this.dialog
       .open(ShareSelectedDialogComponent, {
         width: '250px',
-        data: this.selectedItems,
+        data: {numberOfItemsToShare : this.selectedItems.length,}
       })
       .afterClosed()
       .subscribe((userId) => {
+        debugger;
         console.log('assignToUserDialog dialog was closed, Result:');
         console.dir(userId);
 

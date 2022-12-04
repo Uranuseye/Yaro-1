@@ -38,8 +38,8 @@ export class VideoService {
     console.log('Connection started');
 
     // registration of 'NewUserArrived' method
-    this.hubConnection.on('NewUserArrived', (username) => {
-      this.newPeer.next(JSON.parse(username));
+    this.hubConnection.on('NewUserArrived', (userName) => {
+      this.newPeer.next(JSON.parse(userName));
     });
 
     // registration of 'UserSaidHello' method

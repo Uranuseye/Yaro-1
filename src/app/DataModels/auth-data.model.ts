@@ -4,8 +4,12 @@
 export interface AuthData {
   firstName: string;
   lastName: string;
-  username: string;
+  userName: string;
   password: string;
   email:string;
-  
+}
+
+export interface LoginData {
+  password: string;
+  email:string;
 }

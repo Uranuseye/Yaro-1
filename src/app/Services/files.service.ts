@@ -84,9 +84,10 @@ export class FileService {
    */
   uploadFile(/* albumobjId: string, */ formData: FormData) {
     //formData.append("AlbumId", albumId); // we append the album name to the file
-    console.log(formData); // log for debug will be removed in the future
-
+    console.debug(formData); // log for debug will be removed in the future
+    
     const request$ = this.http
+    
       .post(this.hostApiData + 'upload_file', formData, { reportProgress: true })
       // the server returns the file object that was entered the db
       .pipe(
@@ -208,7 +209,8 @@ export class FileService {
 
   shareFileWithUser(currentAlbum: string, userId: string, files: string[]) {
     const fileToShare = {
-      SourceAlbumId: currentAlbum,
+      // SourceAlbumId: currentAlbum,
+      AlbumId: currentAlbum,
       UserToShareWithObjId: userId,
       ListFileIds: files,
     };

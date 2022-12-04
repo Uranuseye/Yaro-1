@@ -2,7 +2,7 @@ import {AlbumModel} from '../DataModels/album.model';
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Subject} from 'rxjs';
-import {map} from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import {Router} from '@angular/router';
 import {hostApi} from '../globals';
 
@@ -160,7 +160,7 @@ export class AlbumService {
         );
         this.albums.push(album); // push the album to the array of albums
         this.albumsUpdated.next([...this.albums]); // and we inform the subject and return new copy of albums array
-        this.router.navigate(['/albums']); // and navigate back to album page
+        this.router.navigate(['/album']); // and navigate back to album page
       });
   }
 
@@ -236,7 +236,7 @@ export class AlbumService {
         updatedAlbums[oldAlbumIndex] = albumUpdated; // and replace with the new album object
         this.albums = updatedAlbums; // we init the new album list with the updated array of albums
         this.albumsUpdated.next([...this.albums]); // and we inform the subject and return new copy of albums array
-        this.router.navigate(['/albums']); // navigate to album page
+        this.router.navigate(['/album']); // navigate to album page
       });
   }
 
@@ -295,9 +295,13 @@ export class AlbumService {
    * @param {string} fileId
    */
   delFileFromRecycleOnly(files: string[]) {
-    const recycleDelete = { ListOfFilesToDelete: files };
+    const recycleBinFiles = { ListOfFilesToDelete: files, LooseOwnership:false, };
     this.http
-      .post(this.hostApiData + 'empty_recycleBin/', recycleDelete)
+      .post(this.hostApiData + 'empty_recycleBin/', recycleBinFiles)
+      .pipe(
+        tap(console.log),
+        map((serverResponse) => serverResponse)
+      ) // we re-edit the information to remove the  messages
       .subscribe(() => {
         console.log('Recycle Bin - deleted!');
       });

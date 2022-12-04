@@ -3,7 +3,8 @@ export interface Users {
   avatar: string;
   firstName: string;
   lastName: string;
-  userName: string;
-  isFollowed: boolean;
-  isFollowing: boolean;
+  email: string | null;
+  userName: string | null;
+  isFollowed: boolean | null;
+  isFollowing: boolean | null;
 }

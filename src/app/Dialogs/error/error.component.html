@@ -1,15 +1,15 @@
 <h1 mat-dialog-title>An Error Occurred!</h1>
-<div mat-dialog-content>
-  <p class="mat-body-1">{{ data?.message }}</p>
-</div>
-<div mat-dialog-content>
-  <p class="mat-body-1">{{ this.messageText }}</p>
+<br>
+  <div mat-dialog-content>
+  <p class="mat-body-1">Error Status Code: {{data?.errorResponse.error.statusCode }}</p>
 </div>
   <div mat-dialog-content>
-  <p class="mat-body-1">{{data?.errorResponse }}</p>
+  <p class="mat-body-1">Error Message: {{data?.errorResponse.error.message}}</p> 
 </div>
-  <div mat-dialog-content>
-  <p class="mat-body-1">{{errorResponseTextLines}}</p> 
+<br>
+<h3>trace</h3>
+<div mat-dialog-content>
+  <p class="mat-body-1">data?.message: {{ data?.message }}</p>
 </div>
 <div mat-dialog-actions>
   <button mat-raised-button mat-dialog-close>Okay</button>

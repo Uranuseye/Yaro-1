@@ -24,11 +24,11 @@
     *ngFor="let user of listOfUsers"
     (click)="onUserSelect(user)"
     >
-      <img matListAvatar src="{{user.Avatar}}" alt="img">
+      <img matListAvatar src="{{user.avatar}}" alt="img">
       <!-- <h3 matLine> {{message.from}} </h3> -->
       <p matLine>
         <span> {{user.objId}} </span>
-        <span class="demo-2"> {{user.FirstName}} {{user.LastName}}</span>
+        <span class="demo-2"> {{user.userName}} {{user.firstName}} {{user.lastName}}</span>
       </p>
     </mat-list-item>
   </mat-list>

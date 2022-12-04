@@ -56,7 +56,7 @@ const routes: Routes = [
     runGuardsAndResolvers: 'always'
   },
   {
-    path: 'albums',
+    path: 'album',
     component: AlbumListComponent,
     canActivate: [AuthGuard],
     runGuardsAndResolvers: 'always',
@@ -149,7 +149,7 @@ const routes: Routes = [
   {
     // default
     path: '',
-    redirectTo: 'albums',
+    redirectTo: 'album',
     pathMatch: 'full',
   },
   {

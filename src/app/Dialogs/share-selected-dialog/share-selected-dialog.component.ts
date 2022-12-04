@@ -22,17 +22,19 @@ export class ShareSelectedDialogComponent implements OnInit {
   constructor(
     private followService: FollowService,
     public dialogRef: MatDialogRef<ShareSelectedDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: FileObject[]) {
+    @Inject(MAT_DIALOG_DATA) public data:{numberOfItemsToShare:number},
+    ) {
   }
 
   ngOnInit() {
+    debugger;
     this.followService.getUsers();
     this.users = this.followService.getUsersUpdateListener();
 
     this.users
       .subscribe(
-        data => {
-          this.options = data;
+        userList => {
+          this.options = userList;
         });
 
     this.users = this.myControl.valueChanges.pipe(
@@ -52,7 +54,7 @@ export class ShareSelectedDialogComponent implements OnInit {
   }
 
   onShopSelectionChanged(selected: any) {
-    this.selected = selected.objId;
+    this.selected = selected.id;
   }
 
 

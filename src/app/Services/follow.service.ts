@@ -4,7 +4,7 @@ import { Post } from "../DataModels/post.model";
 import { map, tap } from "rxjs/operators";
 import { Subject } from "rxjs";
 import { Users } from "../DataModels/users.model";
-import { hostApi } from "../globals";
+import { hostApi, hostApiAuthentication } from "../globals";
 
 @Injectable({
   providedIn: "root",
@@ -14,7 +14,7 @@ export class FollowService {
   
 
   //public currentlocalhost = 'https://localhost:5001';
-  private users: Users[] = []; // albums array
+  private usersListAllButMe: Users[] = []; // albums array
 
   private usersUpdated = new Subject<Users[]>();
   usersUpdated$ = this.usersUpdated.asObservable();
@@ -47,15 +47,15 @@ export class FollowService {
    */
   getUsers() {
     return this.http
-      .get(this.hostApiFollow+ 'GetAllUsers/')
+      .get(hostApiAuthentication + 'GetAllUsers2/')
       .pipe(
         // tap(console.log),
         map((serverResponse) => serverResponse)
       ) // we re-edit the information to remove the  messages
       .subscribe((usersList: Users[]) => {
-        this.users = usersList;
+        this.usersListAllButMe = usersList;
         //console.log(JSON.stringify(this.users));
-        this.usersUpdated.next(this.users); // we return the information trough observable
+        this.usersUpdated.next(this.usersListAllButMe); // we return the information trough observable
       });
   }
   /**
@@ -63,7 +63,7 @@ export class FollowService {
    */
   getFollowingUsers() {
     return this.http
-      .get(this.hostApiFollow+ 'followers/')
+      .get(this.hostApiFollow + 'followers/')
       .pipe(
         tap(console.log),
         map((serverResponse) => serverResponse)
@@ -91,9 +91,9 @@ export class FollowService {
         //console.log('Received Data:' + data);
         //console.dir(data);
         //this.users.unshift(data);
-        const index = this.users.findIndex((e) => e.id === data.objId);
-        this.users[index] = data;
-        this.usersUpdated.next([...this.users]);
+        const index = this.usersListAllButMe.findIndex((e) => e.id === data.objId);
+        this.usersListAllButMe[index] = data;
+        this.usersUpdated.next([...this.usersListAllButMe]);
         //console.dir(this.users);
       });
   }
@@ -112,9 +112,9 @@ export class FollowService {
       .subscribe((data: any) => {
         // console.log('Received Data:' + data);
         // console.dir(data);
-        const index = this.users.findIndex((e) => e.id === data.objId);
-        this.users[index] = data;
-        this.usersUpdated.next([...this.users]);
+        const index = this.usersListAllButMe.findIndex((e) => e.id === data.objId);
+        this.usersListAllButMe[index] = data;
+        this.usersUpdated.next([...this.usersListAllButMe]);
         // console.dir(this.users);
       });
   }

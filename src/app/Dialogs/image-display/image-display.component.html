@@ -24,8 +24,8 @@
   </div>
   <!-- Image -->
   <ng-template #imagetag>
-  <img [src]="imageURL" alt="currentIndex"
-    max-width="100vw">
+  <img [src]="imageURL" alt="currentIndex" onerror="this.src='/assets/images/man.svg'"
+    max-width="80vw">
     <!-- <img [src]="showPreviw(this.dataImages[currentIndex])"
     max-width="100vw"
     > -->

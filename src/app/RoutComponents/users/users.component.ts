@@ -18,6 +18,8 @@ import {FilterModuleModule} from '../../ComponentModuleDependencies/filter-modul
 export class UsersComponent implements OnInit {
   users: Observable<Users[]>;
   users2Show: Users[];
+
+  
   filterStr: string = '';
   filterKey: string = 'first';
 
@@ -32,8 +34,8 @@ export class UsersComponent implements OnInit {
 
     this.users
       .subscribe(
-        data => {
-          this.users2Show = data;
+        usersList => {
+          this.users2Show = usersList;
           // this.users2Show = data.sort(( l, r ) => {
           //   const left = l.LastName + l.FirstName;
           //   const right = r.LastName + r.FirstName;

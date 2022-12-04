@@ -57,9 +57,6 @@
                 <button mat-menu-item (click)="deleteSelected()">
                   Delete Selected
                 </button>
-                <button mat-menu-item (click)="wipeFromAll()">
-                  Delete From All MY Albums
-                </button>
               </mat-menu>
             </mat-menu>
             <mat-menu #moveTo="matMenu">
@@ -132,7 +129,7 @@
 
     </mat-tab>
 
-    <div *ngIf="albumInfo.name !=='Recycle Bin'">
+    <div *ngIf="albumInfo.name !=='Recycle Bin' && albumInfo.name !=='FILES_TO_DELETE'">
       <mat-tab label="Upload">
 
         <ng-template mat-tab-label>

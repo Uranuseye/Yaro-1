@@ -39,6 +39,6 @@ export class SecureImageComponent implements OnChanges, OnDestroy {
   }
 
   ngOnDestroy() {
-    URL.revokeObjectURL(this.imageURL.toString());
+    //URL.revokeObjectURL(this.imageURL.toString());
   }
 }
